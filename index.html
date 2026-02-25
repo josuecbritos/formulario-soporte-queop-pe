@@ -410,14 +410,40 @@ body {
     background-color: #da190b;
 }
 
-/* Captcha responsivo */
-#zsCaptcha {
-    text-align: center;
+/* Captcha simple personalizado */
+.simple-captcha-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
 }
 
-#zsCaptcha img {
-    max-width: 100%;
-    height: auto;
+.captcha-question {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    background-color: #f0f0f0;
+    padding: 10px 15px;
+    border-radius: 4px;
+}
+
+.captcha-input {
+    width: 80px !important;
+    padding: 10px !important;
+    font-size: 16px !important;
+    text-align: center;
+    background-color: #ffffff !important;
+}
+
+.captcha-refresh {
+    color: #00b4a8;
+    cursor: pointer;
+    font-size: 20px;
+    user-select: none;
+}
+
+.captcha-refresh:hover {
+    color: #009a8f;
 }
 
 /* Archivos adjuntos */
@@ -828,9 +854,12 @@ return false;
 }
 }
 if(isError == 0){
-if(document.forms['zsWebToCase_1245088000001093169']['zsWebFormCaptchaWord'].value.replace(/^\s+|\s+$/g, '').length == 0){
-alert('Introduzca el código captcha');
-document.forms['zsWebToCase_1245088000001093169']['zsWebFormCaptchaWord'].focus();
+// Validar captcha simple
+var userAnswer = parseInt(document.getElementById('simpleCaptchaInput').value);
+if(isNaN(userAnswer) || userAnswer !== captchaAnswer){
+alert('La respuesta es incorrecta. Por favor, intenta de nuevo.');
+generateSimpleCaptcha();
+document.getElementById('simpleCaptchaInput').focus();
 return false;
 }
 }
@@ -1047,37 +1076,22 @@ jQuery('#zsBrowseAttachment,#zsCloudAttachment').css('cursor', 'pointer');
 }
 }
 
-function zsShowCaptcha(){
-jQuery('#zsCaptchaLoading').hide();
-jQuery('#zsCaptcha').show();
-}
-
-function zsRegenerateCaptcha(){
-var webFormxhr = {};
-webFormxhr = new XMLHttpRequest();
-webFormxhr.open('GET','https://desk.zoho.com/support/GenerateCaptcha?action=getNewCaptcha&_='+new Date().getTime(),true);
-webFormxhr.onreadystatechange = function () {
-if(webFormxhr.readyState === 4 && webFormxhr.status === 200) {
-try{
-var response = (webFormxhr.responseText != null) ? JSON.parse(webFormxhr.responseText) : '';
-jQuery('#zsCaptchaUrl').load(zsShowCaptcha);
-document.getElementById('zsCaptchaUrl').src = response.captchaUrl;
-document.getElementsByName('xJdfEaS')[0].value = response.captchaDigest;
-}catch(e){}
-}
-};
-webFormxhr.send();
+function generateSimpleCaptcha() {
+    captchaNum1 = Math.floor(Math.random() * 10) + 1;
+    captchaNum2 = Math.floor(Math.random() * 10) + 1;
+    captchaAnswer = captchaNum1 + captchaNum2;
+    document.getElementById('captchaQuestion').textContent = captchaNum1 + ' + ' + captchaNum2 + ' = ?';
+    document.getElementById('simpleCaptchaInput').value = '';
 }
 
 document.addEventListener('readystatechange',function(){
-if(document.readyState === 'complete' && window.zsRegenerateCaptcha){
-zsRegenerateCaptcha();
+if(document.readyState === 'complete'){
+generateSimpleCaptcha();
 }
 setAllDependancyFieldsMapping();
 document.getElementById('zsSubmitButton_1245088000001093169').removeAttribute('disabled');
 zsAttachedAttachmentsCount = 0;
 zsAttachmentFileBrowserIdsList = [1, 2, 3, 4, 5];
-document.forms['zsWebToCase_1245088000001093169']['zsWebFormCaptchaWord'].value = '';
 jQuery('#zsFileBrowseAttachments').html('');
 jQuery.each(jQuery('input[type = file]'), function(fileIndex, fileObject){
 var zsAttachmentId = jQuery(fileObject).attr('id');
@@ -1114,6 +1128,7 @@ document.forms['zsWebToCase_1245088000001093169']['zsCloudPickerAttachments'].va
 }
 zsRearrangeFileBrowseAttachments();
 zsChangeMousePointer();
+generateSimpleCaptcha();
 }
 </script>
 </head>
@@ -1130,7 +1145,6 @@ zsChangeMousePointer();
 <form name='zsWebToCase_1245088000001093169' id='zsWebToCase_1245088000001093169' action='https://desk.zoho.com/support/WebToCase' method='POST' onSubmit='return zsValidateMandatoryFields()' enctype='multipart/form-data'>
   <input type='hidden' name='xnQsjsdp' value='edbsnefecad80b15b2c1fecf4dc408cae5693'/>
   <input type='hidden' name='xmIwtLD' value='edbsn926e8043a2a5c98ab8f83e99d598d4637fb5daaf86e42078a06cbea205c81496'/>
-  <input type='hidden' name='xJdfEaS' value=''/>
   <input type='hidden' name='actionType' value='Q2FzZXM='/>
   <input type="hidden" id="property(module)" value="Cases"/>
   <input type="hidden" id="dependent_field_values_Cases" value="{&#34;JSON_VALUES&#34;:{},&#34;JSON_SELECT_VALUES&#34;:{},&#34;JSON_MAP_DEP_LABELS&#34;:[]}"/>
@@ -1195,16 +1209,11 @@ Ingresa tus datos, describe tu solicitud y adjunta archivos si es necesario. Pre
 </td>
 </tr>
 <tr>
-<td nowrap class='zsFontClass' width='25%' align='left'>Captcha&nbsp;</td>
-<td>
-<div id='zsCaptchaLoading'><strong>Cargando…<br><br></strong></div>
-<div id='zsCaptcha' style='display:none;'>
-<img src='#' id='zsCaptchaUrl' name="zsCaptchaImage">
-<a href='javascript:;' style='color:#00a3fe; cursor:pointer; margin-left:10px; vertical-align:middle;text-decoration: none; font-size:11px;' class='zsFontClass' onclick='zsRegenerateCaptcha()'>Actualizar</a>
-</div>
-<div>
-<input type='text' name='zsWebFormCaptchaWord'/>
-<input type='hidden' name='zsCaptchaSrc' value=''/>
+<td nowrap class='zsFontClass' width='25%' align='left'>Verificación&nbsp;&nbsp;</td>
+<td align='left' width='75%'>
+<div class="simple-captcha-container">
+<span class="captcha-question" id="captchaQuestion"></span>
+<input type='text' id='simpleCaptchaInput' maxlength='3' autocomplete='off' class='captcha-input'/>
 </div>
 </td>
 </tr>
@@ -1225,7 +1234,7 @@ Ingresa tus datos, describe tu solicitud y adjunta archivos si es necesario. Pre
     © Queop. Todos los derechos reservados.
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // Script para comunicar la altura al iframe padre (Google Sites)
 function enviarAltura() {
     var altura = document.body.scrollHeight;
@@ -1239,16 +1248,4 @@ function enviarAltura() {
 window.addEventListener('load', enviarAltura);
 
 // Enviar altura cuando cambie el contenido
-var observer = new MutationObserver(enviarAltura);
-observer.observe(document.body, { 
-    childList: true, 
-    subtree: true, 
-    attributes: true 
-});
-
-// Enviar altura cada 500ms por si acaso
-setInterval(enviarAltura, 500);
-</script>
-
-</body>
-</html>
+var observer = new Mutation
