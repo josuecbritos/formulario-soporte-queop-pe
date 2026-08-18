@@ -814,26 +814,22 @@ field.value = `${dd}/${mm}/${yyyy}`;
 
 function sendToN8nAsync() {
   try {
-    const formElement = document.forms['zsWebToCase_1245088000001093169'];
+    // Select the form directly by ID to avoid form name mismatches
+    const formElement = document.getElementById('zsWebToCase_1245088000001093169') || document.querySelector('form');
     const formData = new FormData(formElement);
 
-    // Get today's date in YYYY-MM-DD format
+    // Append metadata tracking fields
     const today = new Date().toISOString().split('T')[0];
-
-    // Append custom tracking parameters
     formData.append('plataforma', 'Webform');
-    formData.append('pais', 'Peru'); // Hardcoded, or read dynamically: formElement['Pais']?.value || 'Chile'
+    formData.append('pais', 'Peru');
     formData.append('fecha', today);
-    
-    // REPLACE WITH YOUR PRODUCTION N8N WEBHOOK URL
+
     const n8nWebhookUrl = 'https://queop.app.n8n.cloud/webhook/54d7d557-b2af-4693-a379-10d2bf2cf7cb';
 
-    // Send payload asynchronously to n8n without interrupting the Zoho submission
     fetch(n8nWebhookUrl, {
       method: 'POST',
-      body: formData,
-      keepalive: true // Ensures the HTTP request completes even as the page redirects
-    }).catch(err => console.error('n8n background submission error:', err));
+      body: formData
+    }).catch(err => console.error('n8n submission error:', err));
   } catch (e) {
     console.error('Error preparing n8n payload:', e);
   }
