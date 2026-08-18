@@ -565,7 +565,7 @@ body {
 <script src='https://static.zohocdn.com/zohodeskstatic/app/js/jqueryandencoder.ef05974972bf3bca1b87.js'></script>
 <script>
 window.addEventListener('pageshow', function () {
-const submitButton = document.getElementById('zsSubmitButton_1245088000000523070');
+const submitButton = document.getElementById('zsSubmitButton_1245088000001093169');
 if (submitButton) {
   submitButton.removeAttribute('disabled');
 }
@@ -852,7 +852,7 @@ async function handleSubmitToN8n(event) {
   }
 
   // 3. Update UI button state
-  const submitBtn = document.getElementById('zsSubmitButton_1245088000000523070');
+  const submitBtn = document.getElementById('zsSubmitButton_1245088000001093169');
   if (submitBtn) {
     submitBtn.disabled = true;
     submitBtn.value = 'Enviando...';
@@ -912,7 +912,7 @@ async function handleSubmitToN8n(event) {
 
 // Function to allow submitting another ticket without reloading the page
 function showFormAgain() {
-  zsResetWebForm('1245088000000523070');
+  zsResetWebForm('1245088000001093169');
   document.getElementById('successMessage').style.display = 'none';
   document.getElementById('zsWebToCase_1245088000001093169').style.display = 'block';
   if (typeof enviarAltura === 'function') enviarAltura();
@@ -1130,7 +1130,7 @@ if(document.readyState === 'complete'){
 generateSimpleCaptcha();
 }
 setAllDependancyFieldsMapping();
-document.getElementById('zsSubmitButton_1245088000000523070').removeAttribute('disabled');
+document.getElementById('zsSubmitButton_1245088000001093169').removeAttribute('disabled');
 zsAttachedAttachmentsCount = 0;
 zsAttachmentFileBrowserIdsList = [1, 2, 3, 4, 5];
 jQuery('#zsFileBrowseAttachments').html('');
@@ -1158,7 +1158,7 @@ zsChangeMousePointer();
 
 function zsResetWebForm(webFormId){
 document.forms['zsWebToCase_'+webFormId].reset();
-document.getElementById('zsSubmitButton_1245088000000523070').removeAttribute('disabled');
+document.getElementById('zsSubmitButton_1245088000001093169').removeAttribute('disabled');
 setAllDependancyFieldsMapping();
 zsAttachedAttachmentsCount = 0;
 zsAttachmentFileBrowserIdsList = [1, 2, 3, 4, 5];
@@ -1270,8 +1270,8 @@ Ingresa tus datos, describe tu solicitud y adjunta archivos si es necesario. Pre
 <tr>
 <td style='padding: 11px 5px 0px 5px;' colspan='2' width='25%'>
 <div class="button-container">
-<input type='button' class='zsFontClass' value='Restablecer' onclick="zsResetWebForm('1245088000000523070')">
-<input type='submit' id="zsSubmitButton_1245088000000523070" class='zsFontClass' value='Enviar'>
+<input type='button' class='zsFontClass' value='Restablecer' onclick="zsResetWebForm('1245088000001093169')">
+<input type='submit' id="zsSubmitButton_1245088000001093169" class='zsFontClass' value='Enviar'>
 </div>
 </td>
 </tr>
