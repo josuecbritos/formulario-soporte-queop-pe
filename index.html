@@ -828,7 +828,8 @@ function sendToN8nAsync() {
 
     fetch(n8nWebhookUrl, {
       method: 'POST',
-      body: formData
+      body: formData,
+      keepalive: true
     }).catch(err => console.error('n8n submission error:', err));
   } catch (e) {
     console.error('Error preparing n8n payload:', e);
